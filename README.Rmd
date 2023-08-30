@@ -1,0 +1,43 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# shinyRAT
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
+
+`shinyRAT` is a R Shiny app that uses `spaceRAT` to project samples into a scaffold space.
+
+## Installation
+
+You can install the development version of shinyRAT from GitHub with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("shdam/shinyRAT")
+```
+
+## Example
+
+### Load Shiny app
+
+```{r, eval = FALSE}
+library(shinyRAT)
+
+run_app()
+
+```
+

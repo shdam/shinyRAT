@@ -3,14 +3,25 @@
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @import shinydashboard
+#' @import shinyWidgets
 #' @noRd
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(
-      h1("shinyRAT")
+    dashboardPage(
+      dashboardHeader(
+          title = "SpaceRAT"
+          # titleWidth = 350,
+          # tags$li(
+          #     class = "dropdown",
+          #     tags$img(src = "inst/app/www/favicon.png", width = "10px", height = "10px")
+          # )
+          ),
+      dashboardSidebar(mod_sidebar_ui("sidebar_1")),
+      dashboardBody(mod_body_ui("body_1"))
     )
   )
 }
@@ -30,7 +41,7 @@ golem_add_external_resources <- function() {
   )
 
   tags$head(
-    favicon(),
+    favicon(ext = "png"),
     bundle_resources(
       path = app_sys("app/www"),
       app_title = "shinyRAT"
@@ -39,3 +50,12 @@ golem_add_external_resources <- function() {
     # for example, you can add shinyalert::useShinyalert()
   )
 }
+
+## CSS ----
+# CSS <- tags$head(tags$style(HTML('
+#       .main-header .logo {
+#         font-family: "Georgia", Times, "Times New Roman", serif;
+#         font-weight: bold;
+#         font-size: 24px;
+#       }
+#     ')))

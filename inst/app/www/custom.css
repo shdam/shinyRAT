@@ -1,0 +1,32 @@
+ :root {
+  --bg: white;
+  --bg_settings: lightgray;
+  --text: black;
+  --sb_text: white;
+  --tt_text: black;
+  --btn_color: darkgray;
+  --btn_hover: gray;
+  --error: red;
+}
+/*
+.control-label.sidebar {
+    color: var(--sb_text);
+}
+*/
+.error {
+    color: var(--error);
+    margin-top: -15px;
+}
+
+.msg {
+    color: white;
+    margin-top: -15px;
+    margin-left: 15px;
+}
+/*
+.main-header .logo {
+  font-family: "Georgia", Times, "Times New Roman", serif;
+  font-weight: bold;
+  font-size: 24px;
+}
+*/
