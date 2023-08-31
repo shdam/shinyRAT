@@ -2,3 +2,5 @@
 dev
 *.DS_Store
 .Rhistory
+rsconnect/
+R/_disable_autoload.R

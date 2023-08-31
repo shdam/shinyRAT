@@ -57,7 +57,6 @@ mod_sidebar_server <- function(id, r){
 
     # Allow large files
     options(shiny.maxRequestSize = 6000*1000^2) # 6 GB
-
     # Inputs ----
     # observeEvent( input$dimred, {
     #     r$dim_reduction <- input$dimred

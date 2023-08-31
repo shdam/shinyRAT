@@ -5,6 +5,7 @@
 #' @import shiny
 #' @import spaceRATScaffolds
 #' @import spaceRAT
+#' @import magrittr
 #' @importFrom plotly ggplotly
 #' @noRd
 app_server <- function(input, output, session) {

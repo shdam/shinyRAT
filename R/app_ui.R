@@ -12,14 +12,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     dashboardPage(
-      dashboardHeader(
-          title = "SpaceRAT"
-          # titleWidth = 350,
-          # tags$li(
-          #     class = "dropdown",
-          #     tags$img(src = "inst/app/www/favicon.png", width = "10px", height = "10px")
-          # )
-          ),
+      dashboardHeader(title = "SpaceRAT"),
       dashboardSidebar(mod_sidebar_ui("sidebar_1")),
       dashboardBody(mod_body_ui("body_1"))
     )
@@ -50,12 +43,3 @@ golem_add_external_resources <- function() {
     # for example, you can add shinyalert::useShinyalert()
   )
 }
-
-## CSS ----
-# CSS <- tags$head(tags$style(HTML('
-#       .main-header .logo {
-#         font-family: "Georgia", Times, "Times New Roman", serif;
-#         font-weight: bold;
-#         font-size: 24px;
-#       }
-#     ')))
