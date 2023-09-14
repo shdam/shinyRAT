@@ -24,5 +24,6 @@ app_server <- function(input, output, session) {
   mod_scaffold_server("scaffold_1", r = r)
   mod_space_server("space_1", r = r)
   mod_sample_files_server("sample_files_1", r = r)
+  mod_loading_server("loading_1", r = r)
 
 }

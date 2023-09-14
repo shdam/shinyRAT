@@ -17,6 +17,10 @@ mod_sidebar_ui <- function(id){
             choices = c("dot", "tiny_label"),
             selected = "dot"
         ) %>% tagAppendAttributes(class = "sidebar"),
+        checkboxInput(
+            inputId = ns("interactive"),
+            label = "Interactive",
+            value = TRUE),
     # mod_space_ui("space_1"),
     # selectInput(
     #   inputId = ns("dimred"),
@@ -69,6 +73,9 @@ mod_sidebar_server <- function(id, r){
     # })
     observeEvent( input$plot_mode, {
       r$plot_mode <- input$plot_mode
+    })
+    observeEvent( input$interactive, {
+        r$interactive <- input$interactive
     })
     # Plot title
     observeEvent( r$sample_exprs, {

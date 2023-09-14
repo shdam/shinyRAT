@@ -12,13 +12,18 @@ mod_body_ui <- function(id){
   tagList(
     box(
       title = "Scaffold space", solidHeader = TRUE,
-      collapsible = TRUE, width = 10,
-      mod_scaffold_ui("scaffold_1"),
+      collapsible = TRUE, width = 7,
+      mod_scaffold_ui("scaffold_1")
     ),
     box(
         title = "Add sample", solidHeader = TRUE,
-        collapsible = TRUE, width = 5,
+        collapsible = TRUE, width = 3,
         mod_sample_files_ui("sample_files_1")
+    ),
+    box(
+        title = "Loading plot", solidHeader = TRUE,
+        collapsible = TRUE, width = 7, collapsed = TRUE,
+        mod_loading_ui("loading_1")
     )
 
   )

@@ -38,21 +38,32 @@ mod_scaffold_server <- function(id, r){
                 )
             })
 
+
         # Scaffold plot ----
-    observeEvent({r$scaffold; input$build_scaffold}, {
+    observeEvent({r$scaffold; input$build_scaffold; r$interactive}, {
+
       if(is(r$scaffold, "NULL")) {
         output$scaffold <- renderUI({NULL})
       }else{
-        output$scaffold <- renderUI({
-            spaceRAT::plotScaffold(
-              space = r$scaffold,
-              # title = r$scaffold_title,
-              plot_mode = r$plot_mode,
-              # dims = r$dims,
-              # dim_reduction = "PCA"
-              ) %>%
-            ggplotly()
-        })
+          scaffold_plot <- reactive({
+              spaceRAT::plotScaffold(
+                  space = r$scaffold,
+                  # title = r$scaffold_title,
+                  plot_mode = r$plot_mode,
+                  # dims = r$dims,
+                  # dim_reduction = "PCA"
+              )
+          })
+          if(r$interactive){
+              output$scaffold <- renderUI({
+                  plotly::ggplotly(scaffold_plot())
+              })
+          } else{
+              output$scaffold <- renderUI({
+                  renderPlot({scaffold_plot()})
+              })
+          }
+
       }
     })
         # Add sample ----
@@ -68,21 +79,29 @@ mod_scaffold_server <- function(id, r){
             }
         })
         # Plot sample ----
-        observeEvent(input$plot_sample, {
+        observeEvent({input$plot_sample; r$interactive}, {
             r$plot_sample <- input$plot_sample
             if(is(r$scaffold, "NULL")){
                 output$add_sample <- renderUI({NULL})
             } else{
-                output$scaffold <- renderUI({
+                sample_plot <- reactive({
                     spaceRAT::projectSample(
                         space = r$scaffold,
                         sample = r$sample_exprs,
                         pheno = r$sample_pheno,
                         colname = r$colname,
                         title = r$title
-                    ) %>%
-                        ggplotly()
+                    )
                 })
+                if(r$interactive){
+                    output$scaffold <- renderUI({
+                        plotly::ggplotly(sample_plot())
+                    })
+                } else{
+                    output$scaffold <- renderUI({
+                        renderPlot({sample_plot()})
+                    })
+                }
             }
         })
   })
