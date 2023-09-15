@@ -43,6 +43,7 @@ mod_sample_files_server <- function(id, r){
 
 
     # Add data ----
+    r$add_sample <- FALSE
     observeEvent( input$sample_exprs, {
         r$sample_exprs <- readFile(input$sample_exprs$datapath)
         if(is(r$sample_exprs, "character")){
@@ -51,17 +52,21 @@ mod_sample_files_server <- function(id, r){
                     tagAppendAttributes(class = 'error')
             })
         } else output$exprs_format <- renderUI({NULL})
+        # r$add_sample <- TRUE
         })
     r$sample_pheno <- NULL
+    r$add_pheno <- FALSE
     observeEvent( input$sample_pheno, {
         r$sample_pheno <- readFile(input$sample_pheno$datapath)
         r$colnames <- colnames(r$sample_pheno)
+        r$sample_colname <- r$colnames[1]
         if(is(r$sample_pheno, "character")){
             output$pheno_format <- renderUI({
                 p(r$sample_pheno) %>%
                     tagAppendAttributes(class = 'error')
             })
         } else output$pheno_format <- renderUI({NULL})
+        r$add_pheno <- TRUE
         })
 
     # Tooltips ----

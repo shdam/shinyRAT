@@ -11,10 +11,10 @@ mod_scaffold_ui <- function(id){
   ns <- NS(id)
   tagList(
       uiOutput(ns("scaffold"), height = 250),
-      actionButton(
-        inputId = ns("build_scaffold"),
-        label = "Build Scaffold"),
-      uiOutput(ns("add_sample"))
+      # actionButton(
+      #   inputId = ns("build_scaffold"),
+      #   label = "Build Scaffold"),
+      # uiOutput(ns("add_sample"), inline = TRUE)
   )
 }
 
@@ -24,36 +24,41 @@ mod_scaffold_ui <- function(id){
 mod_scaffold_server <- function(id, r){
     moduleServer( id, function(input, output, session){
         ns <- session$ns
-        # Build scaffold ----
-        observeEvent(input$build_scaffold, {
-            # r$build_scaffold <- input$build_scaffold
-            r$scaffold <- spaceRAT::buildScaffold(
-                r$space,
-                classes = r$classes,
-                data = r$data,
-                add_umap = FALSE
-                # annotation = r$annotation
-                # pheno = r$scaf_pheno,
-                # colname = r$scaf_colname
-                )
-            })
+
+        # Only build scaffold if classes are subset
+        observeEvent({r$classes}, {
+            if(!all(r$all_classes %in% r$classes)){
+                r$scaffold <- spaceRAT::buildScaffold(
+                        r$space,
+                        classes = r$classes,
+                        data = r$data,
+                        # plot_mode = r$plot_mode,
+                        add_umap = FALSE
+                        # annotation = r$annotation
+                        # pheno = r$scaf_pheno,
+                        # colname = r$scaf_colname
+                    )
+                if(!r$add_sample) r$new_scaffold <- r$scaffold
+            }
+
+        })
 
 
         # Scaffold plot ----
-    observeEvent({r$scaffold; input$build_scaffold; r$interactive}, {
+    observeEvent({r$new_scaffold; r$interactive}, {
 
-      if(is(r$scaffold, "NULL")) {
+      if(is(r$new_scaffold, "NULL")) {
         output$scaffold <- renderUI({NULL})
-      }else{
+      }else if(!r$add_sample){
           scaffold_plot <- reactive({
               spaceRAT::plotScaffold(
-                  space = r$scaffold,
+                  space = r$new_scaffold,
                   # title = r$scaffold_title,
-                  plot_mode = r$plot_mode,
+                  # plot_mode = r$plot_mode,
                   # dims = r$dims,
                   # dim_reduction = "PCA"
               )
-          })
+           })
           if(r$interactive){
               output$scaffold <- renderUI({
                   plotly::ggplotly(scaffold_plot())
@@ -66,30 +71,32 @@ mod_scaffold_server <- function(id, r){
 
       }
     })
-        # Add sample ----
-        observeEvent({r$sample_exprs; r$scaffold}, {
-            if(is(r$scaffold, "NULL") | is(r$sample_exprs, "NULL")){
-                output$add_sample <- renderUI({NULL})
-            } else{
-                output$add_sample <- renderUI({
-                    actionButton(
-                        inputId = ns("plot_sample"),
-                        label = "Plot sample")
-                })
-            }
-        })
+
         # Plot sample ----
-        observeEvent({input$plot_sample; r$interactive}, {
-            r$plot_sample <- input$plot_sample
-            if(is(r$scaffold, "NULL")){
-                output$add_sample <- renderUI({NULL})
+        observeEvent({r$add_sample; r$scaffold; r$interactive}, {
+            # r$plot_sample <- input$plot_sample
+            if(is(r$scaffold, "NULL")){# | is(input$plot_sample, "NULL")){
+                output$scaffold <- renderUI({NULL})
             } else{
+
+
+                # Ensures plot is not regenerated twice
+                pheno <- reactive({
+                    if(is(r$sample_pheno, "NULL") | is(r$sample_colname, "NULL")) NULL
+                    else r$sample_pheno
+                })
+                colname <- reactive({
+                    if(is(r$sample_pheno, "NULL") | is(r$sample_colname, "NULL")) NULL
+                    else r$sample_colname
+                })
+
+                # Add sample to plot
                 sample_plot <- reactive({
                     spaceRAT::projectSample(
                         space = r$scaffold,
                         sample = r$sample_exprs,
-                        pheno = r$sample_pheno,
-                        colname = r$colname,
+                        pheno = pheno(),
+                        colname = colname(),
                         title = r$title
                     )
                 })

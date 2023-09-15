@@ -11,12 +11,12 @@ mod_sidebar_ui <- function(id){
     ns <- NS(id)
     tagList(
         mod_space_ui("space_1"),
-        selectInput(
-            inputId = ns("plot_mode"),
-            label = "Plot mode",
-            choices = c("dot", "tiny_label"),
-            selected = "dot"
-        ) %>% tagAppendAttributes(class = "sidebar"),
+        # selectInput(
+        #     inputId = ns("plot_mode"),
+        #     label = "Plot mode",
+        #     choices = c("dot", "tiny_label"),
+        #     selected = "dot"
+        # ) %>% tagAppendAttributes(class = "sidebar"),
         checkboxInput(
             inputId = ns("interactive"),
             label = "Interactive",
@@ -35,12 +35,6 @@ mod_sidebar_ui <- function(id){
     #         "ensembl_gene", "ensembl_transcript",
     #         "refseq_mrna", "entrez", "hgnc_symbol"),
     #     selected = "ensembl_gene"
-    # ),
-    # selectInput(
-    #   inputId = ns("plot_mode"),
-    #   label = "Plot mode",
-    #   choices = c("dot", "tiny_label"),
-    #   selected = "dot"
     # ),
     uiOutput(ns("classes")),
     uiOutput(ns("pheno_colname")),
@@ -68,12 +62,9 @@ mod_sidebar_server <- function(id, r){
     # observeEvent( input$annotation, {
     #     r$annotation <- input$annotation
     # })
-    # observeEvent( input$loading, {
-    #
+    # observeEvent( input$plot_mode, {
+    #   r$plot_mode <- input$plot_mode
     # })
-    observeEvent( input$plot_mode, {
-      r$plot_mode <- input$plot_mode
-    })
     observeEvent( input$interactive, {
         r$interactive <- input$interactive
     })
@@ -88,6 +79,8 @@ mod_sidebar_server <- function(id, r){
     })
     observeEvent( input$title, {
         r$title <- input$title
+        # Put here to delay plotting
+        r$add_sample <- TRUE
     })
     # Pheno colnames
     observeEvent( r$sample_pheno, {
@@ -97,26 +90,27 @@ mod_sidebar_server <- function(id, r){
                     inputId = ns("colname"),
                     label = "Phenotype column",
                     choices = r$colnames,
-                    selected = r$colnames[1],
+                    selected = r$sample_colname,
                     multiple = FALSE
                 )
             })
         }})
     observeEvent( input$colname, {
-        r$colname <- input$colname
+        # Two versions to prevent double plotting
+        r$sample_colname <- r$colname <- input$colname
     })
 
 
     # Classes ----
     observeEvent( input$classes, {
-      r$classes <- input$classes
+        r$classes <- input$classes
     })
     observeEvent( r$all_classes, {
       # Determine cell types
       output$classes <- renderUI(list(
         selectInput(
           inputId = ns("classes"),
-          label = "Select cell types to include",
+          label = "Select classes to include",
           choices = sort(r$all_classes),
           multiple = TRUE,
           selected = r$classes

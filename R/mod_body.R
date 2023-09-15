@@ -21,7 +21,7 @@ mod_body_ui <- function(id){
         mod_sample_files_ui("sample_files_1")
     ),
     box(
-        title = "Loading plot", solidHeader = TRUE,
+        title = "Gene contribution plot", solidHeader = TRUE,
         collapsible = TRUE, width = 7, collapsed = TRUE,
         mod_loading_ui("loading_1")
     )

@@ -30,18 +30,21 @@ mod_space_server <- function(id, r){
             if(input$space == "dmap"){
                 r$space <- "DMAP_scaffold"
                 r$noScaffold <- renderUI({NULL})
-                r$all_classes <- as.character(unique(
-                    spaceRAT:::loadData("DMAP_scaffold")$label))
+                r$scaffold <- spaceRAT:::loadData("DMAP_scaffold")
+                r$all_classes <- as.character(unique(r$scaffold$label))
                 r$classes <- r$all_classes
                 r$data <- "exprs"
+                r$new_scaffold <- r$scaffold
             } else if(input$space == "gtex"){
                 r$scaffold <- NULL
+                r$new_scaffold <- NULL
                 r$noScaffold <- renderUI({
                     p("Not yet implemented") %>%
                         tagAppendAttributes(class = 'msg')
                     })
             }else if(input$space == "other"){
                 r$scaffold <- NULL
+                r$new_scaffold <- NULL
                 r$noScaffold <- renderUI({
                     p(style = "color:black;", "Not yet implemented") %>%
                         tagAppendAttributes(class = 'msg')
