@@ -4,17 +4,42 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import shinydashboard
+#' @import shinydashboardPlus
 #' @import shinyWidgets
+#' @import waiter
 #' @noRd
 app_ui <- function(request) {
-  tagList(
+  tagList(useWaiter(),
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    dashboardPage(
-      dashboardHeader(title = "SpaceRAT"),
-      dashboardSidebar(mod_sidebar_ui("sidebar_1")),
-      dashboardBody(mod_body_ui("body_1"))
+    dashboardPage(skin = "midnight",
+        preloader = list(html = tagList(spin_1(), "Loading ...")),
+        shinydashboardPlus::dashboardHeader(
+          title = paste("SpaceRAT"),
+          leftUi = tagList(
+              div(textOutput(outputId = "version"), style = "padding: 12px 0;"),
+              sidebarMenu(
+                  id = "welcome",
+                  menuItem(text = "Welcome!", tabName = "welcome", selected = TRUE)
+                  ),
+              sidebarMenu(
+                  id = "projection",
+                  menuItem(text = "Projection", tabName = "spaceRAT"))
+          )),
+        shinydashboardPlus::dashboardSidebar(id = "sidebar",
+            mod_sidebar_ui("sidebar_1"), collapsed = FALSE, minified = FALSE
+            ),
+      dashboardBody(
+          tabItems(
+              tabItem(
+                  tabName = "welcome",
+                  mod_welcome_ui("welcome_1")),
+              tabItem(
+                  tabName = "spaceRAT",
+                  mod_body_ui("body_1"))
+              )
+          )
     )
   )
 }

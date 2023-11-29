@@ -12,19 +12,25 @@ mod_body_ui <- function(id){
   tagList(
     box(
       title = "Scaffold space", solidHeader = TRUE,
-      collapsible = TRUE, width = 7,
+      collapsible = TRUE, width = 10,
       mod_scaffold_ui("scaffold_1")
     ),
-    box(
-        title = "Add sample", solidHeader = TRUE,
-        collapsible = TRUE, width = 3,
-        mod_sample_files_ui("sample_files_1")
-    ),
+    # box(
+    #     title = "Add sample", solidHeader = TRUE,
+    #     collapsible = TRUE, width = 2,
+    #     mod_sample_files_ui("sample_files_1")
+    # ),
     box(
         title = "Gene contribution plot", solidHeader = TRUE,
-        collapsible = TRUE, width = 7, collapsed = TRUE,
+        collapsible = TRUE, width = 10, collapsed = TRUE,
         mod_loading_ui("loading_1")
-    )
+    ),
+    box(
+        title = "Scaffold description", solidHeader = TRUE,
+        collapsible = TRUE, width = 10, collapsed = TRUE,
+        mod_info_ui("info_1")
+    ),
+    uiOutput(ns("prediction_table"))
 
   )
 }
@@ -35,7 +41,13 @@ mod_body_ui <- function(id){
 mod_body_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-
+    observeEvent(r$expr, {
+        box(
+            title = "Prediction table", solidHeader = TRUE,
+            collapsible = TRUE, width = 10, collapsed = TRUE,
+            mod_prediction_ui("prediction_1")
+        )
+    })
   })
 }
 

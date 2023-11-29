@@ -21,13 +21,6 @@ mod_sidebar_ui <- function(id){
             inputId = ns("interactive"),
             label = "Interactive",
             value = TRUE),
-    # mod_space_ui("space_1"),
-    # selectInput(
-    #   inputId = ns("dimred"),
-    #   label = "Select dim reduction:",
-    #   choices = c("PCA", "UMAP"), #"Build scaffold"
-    #   selected = "PCA"
-    # ),
     # selectInput(
     #     inputId = ns("annotation"),
     #     label = "Select annotation:",
@@ -36,7 +29,9 @@ mod_sidebar_ui <- function(id){
     #         "refseq_mrna", "entrez", "hgnc_symbol"),
     #     selected = "ensembl_gene"
     # ),
+    uiOutput(ns("dimred")),
     uiOutput(ns("classes")),
+    mod_sample_files_ui("sample_files_1"),
     uiOutput(ns("pheno_colname")),
     uiOutput(ns("plot_title")),
     br(),
@@ -65,8 +60,25 @@ mod_sidebar_server <- function(id, r){
     # observeEvent( input$plot_mode, {
     #   r$plot_mode <- input$plot_mode
     # })
+    observeEvent( input$dimred, {
+        r$dimred <- input$dimred
+    })
     observeEvent( input$interactive, {
         r$interactive <- input$interactive
+    })
+    observeEvent( input$colname, {
+        # Two versions to prevent double plotting
+        r$sample_colname <- r$colname <- input$colname
+    })
+
+    observeEvent( r$dimreds, {
+        output$dimred <- renderUI({
+            selectInput(
+                inputId = ns("dimred"),
+                label = "Dimensionality reduction",
+                choices = r$dimreds,
+                selected = r$dimred)
+        })
     })
     # Plot title
     observeEvent( r$sample_exprs, {
@@ -95,10 +107,6 @@ mod_sidebar_server <- function(id, r){
                 )
             })
         }})
-    observeEvent( input$colname, {
-        # Two versions to prevent double plotting
-        r$sample_colname <- r$colname <- input$colname
-    })
 
 
     # Classes ----
@@ -106,18 +114,20 @@ mod_sidebar_server <- function(id, r){
         r$classes <- input$classes
     })
     observeEvent( r$all_classes, {
-      # Determine cell types
-      output$classes <- renderUI(list(
-        selectInput(
-          inputId = ns("classes"),
-          label = "Select classes to include",
-          choices = sort(r$all_classes),
-          multiple = TRUE,
-          selected = r$classes
-        ),
-        p("Mark and press the 'delete' button to remove classes.") %>%
-          tagAppendAttributes(class = 'msg')
-      ))
+        if(r$space == "DMAP.v1"){
+            # Determine cell types
+            output$classes <- renderUI(list(
+                selectInput(
+                    inputId = ns("classes"),
+                    label = "Select classes to include",
+                    choices = sort(r$all_classes),
+                    multiple = TRUE,
+                    selected = r$classes
+                ),
+                p("Mark and press the 'delete' button to remove classes.") %>%
+                    tagAppendAttributes(class = 'msg')
+            ))
+        } else{output$classes <- NULL; r$classes <- r$all_classes}
 
     })
 

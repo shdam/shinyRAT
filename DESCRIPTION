@@ -1,6 +1,6 @@
 Package: shinyRAT
 Title: Shiny app for Ranked Analysis for Transcriptomes
-Version: 0.0.0.9000
+Version: 0.99.0
 Authors@R: 
     person(given = "Søren Helweg",
            family = "Dam",
@@ -16,6 +16,8 @@ Imports:
     shinyWidgets,
     shinythemes,
     shinydashboard,
+    shinydashboardPlus,
+    waiter,
     spaceRAT,
     spaceRATScaffolds,
     openxlsx,

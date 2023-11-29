@@ -52,11 +52,11 @@ mod_scaffold_server <- function(id, r){
       }else if(!r$add_sample){
           scaffold_plot <- reactive({
               spaceRAT::plotScaffold(
-                  space = r$new_scaffold,
+                  scaffold = r$new_scaffold,
                   # title = r$scaffold_title,
                   # plot_mode = r$plot_mode,
                   # dims = r$dims,
-                  # dim_reduction = "PCA"
+                  dimred = r$dimred
               )
            })
           if(r$interactive){
@@ -70,6 +70,7 @@ mod_scaffold_server <- function(id, r){
           }
 
       }
+        waiter_hide()
     })
 
         # Plot sample ----
@@ -93,7 +94,7 @@ mod_scaffold_server <- function(id, r){
                 # Add sample to plot
                 sample_plot <- reactive({
                     spaceRAT::projectSample(
-                        space = r$scaffold,
+                        scaffold = r$scaffold,
                         sample = r$sample_exprs,
                         pheno = pheno(),
                         colname = colname(),

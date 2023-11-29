@@ -26,7 +26,7 @@ mod_loading_server <- function(id, r){
             output$loading <- renderUI({NULL})
         }else{
             loading_plot <- spaceRAT::loadingPlot(
-                space = r$scaffold
+                scaffold = r$scaffold
                 # dims = r$dims,
                 # dim_reduction = "PCA"
                 )
